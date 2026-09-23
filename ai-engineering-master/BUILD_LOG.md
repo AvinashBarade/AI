@@ -1,59 +1,28 @@
 # Build Log
 
-Use this file as a **template** and copy sections into each project under `22-projects/<project>/BUILD_LOG.md` as you build.
+Copy sections into `22-projects/<project>/BUILD_LOG.md` as you build portfolio work.
 
-Interviewers love concrete stories: what broke, what you measured, what you changed.
-
----
-
-## Entry Template
+## Template
 
 ```text
 Date:
 Project:
 Goal:
-
 Architecture:
-(ASCII or link to diagram)
-
 What I built:
--
-
 Problems:
--
-
 Debugging:
--
-
 Performance:
-(metrics, before/after)
-
 Security:
--
-
 Cost:
--
-
 What I learned:
--
-
 What I would change:
--
-
 Interview story (2 min):
--
 ```
 
----
+## Global milestones
 
-## Global Milestones
-
-| Date | Milestone | Notes |
-|------|-----------|-------|
-| | Repo scaffold + foundations | |
-
----
-
-## Entries
-
-### (Add dated entries below as you complete project slices)
+| Date | Milestone |
+|------|-----------|
+| | Curriculum repository generated |
+| | Project 01 LLM Chat API shipped |

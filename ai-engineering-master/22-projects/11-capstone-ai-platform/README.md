@@ -1,36 +1,35 @@
-# Project 11 — Enterprise AI Platform (Capstone)
+# Project — Enterprise AI Platform Capstone
 
-**Unlock:** After Phases 7–9 (platform, infra, security, observability).
+Full stack integration
 
-## Reference architecture
+## Architecture
 
 ```text
-                         Users
-                           │
-                           ↓
-                     API Gateway
-                           │
-                           ↓
-                      AI Gateway
-                           │
-             ┌─────────────┼─────────────┐
-             ↓             ↓             ↓
-            RAG          Agents       Models
-             │             │             │
-             ↓             ↓             ↓
-        Vector DB        MCP         Model Router
-                           │             │
-                           └──────┬──────┘
-                                  ↓
-                           Model Serving
-                                  │
-                             Kubernetes
+Client → API → {core services} → Model / Vector DB / Tools
+              ↘ observability (OTel) ↘ policy (auth, quotas)
 ```
 
-## Must include
+## Requirements
 
-Multi-tenancy, authZ, RAG, agents, MCP, routing, serving, observability, security, cost, eval, CI/CD, Terraform, Helm, DR, autoscaling.
+- [ ] README (this file) + ARCHITECTURE.md
+- [ ] Code (Python and/or Go per ROADMAP)
+- [ ] Tests (unit + integration)
+- [ ] Dockerfile + compose or Helm
+- [ ] Observability: metrics + traces
+- [ ] SECURITY.md + FAILURE_MODES.md
+- [ ] BUILD_LOG.md (see root template)
 
-## BUILD_LOG
+## Build phases
 
-Maintain a release-style BUILD_LOG per milestone (MVP → beta → prod).
+1. MVP correctness
+2. Hardening (timeouts, retries, limits)
+3. Observability and cost accounting
+4. Load test + document results
+
+## Failure modes
+
+Document at least five production failures and mitigations before marking complete.
+
+## Interview story
+
+Prepare a 2-minute STAR narrative: constraint → decision → metric → outcome.

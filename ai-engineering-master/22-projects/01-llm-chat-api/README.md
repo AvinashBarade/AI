@@ -1,24 +1,35 @@
-# Project 01 — LLM Chat API
+# Project — LLM Chat API
 
-**Unlock:** After `02-llm-fundamentals` + `03-llm-apis` (see [ROADMAP.md](../../ROADMAP.md)).
+FastAPI streaming chat, tools, structured output, token accounting
 
-## Goal
+## Architecture
 
-Production-style chat API: **FastAPI**, streaming, history, structured output, tool calling, token counting, structured logging.
+```text
+Client → API → {core services} → Model / Vector DB / Tools
+              ↘ observability (OTel) ↘ policy (auth, quotas)
+```
 
-## Stack
+## Requirements
 
-Python 3.11+, FastAPI, Pydantic v2, httpx (or official SDK), optional OpenTelemetry.
+- [ ] README (this file) + ARCHITECTURE.md
+- [ ] Code (Python and/or Go per ROADMAP)
+- [ ] Tests (unit + integration)
+- [ ] Dockerfile + compose or Helm
+- [ ] Observability: metrics + traces
+- [ ] SECURITY.md + FAILURE_MODES.md
+- [ ] BUILD_LOG.md (see root template)
 
-## Acceptance criteria
+## Build phases
 
-- [ ] `POST /v1/chat` with SSE streaming
-- [ ] Conversation persistence (Postgres or Redis)
-- [ ] JSON schema / Pydantic structured responses
-- [ ] Tool definitions + execution loop (bounded steps)
-- [ ] Token usage per request in logs + metrics
-- [ ] Health + readiness probes
+1. MVP correctness
+2. Hardening (timeouts, retries, limits)
+3. Observability and cost accounting
+4. Load test + document results
 
-## BUILD_LOG
+## Failure modes
 
-Copy [BUILD_LOG.md](../../BUILD_LOG.md) template to `./BUILD_LOG.md` when you start.
+Document at least five production failures and mitigations before marking complete.
+
+## Interview story
+
+Prepare a 2-minute STAR narrative: constraint → decision → metric → outcome.

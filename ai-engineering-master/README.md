@@ -1,169 +1,170 @@
 # AI Engineering Master Study Repository
 
-A **production-oriented** curriculum for experienced software engineers transitioning into AI Engineering, AI Platform Engineering, AI Infrastructure, and Forward Deployed / Staff roles.
+A **production-first** curriculum for experienced software engineers (6–7+ years) transitioning into **AI Engineering**, **AI Platform / Infrastructure**, **ML Platform**, and **Staff / FDE** roles at strong AI companies.
 
-You are not learning to code—you are learning to **design, build, deploy, secure, observe, scale, and optimize AI systems** in production.
-
----
-
-## Who This Is For
-
-| You already have | This curriculum adds |
-|------------------|----------------------|
-| 6–7+ years backend / platform / DevSecOps | LLMs, RAG, agents, evaluation, model serving |
-| Go, K8s, Terraform, Azure/AWS, observability | GPU inference, AI gateways, multi-tenant AI platforms |
-| Distributed systems & system design | AI-specific failure modes, cost, security, FDE delivery |
-
-**Prerequisite bar:** Strong in APIs, concurrency, Kubernetes, SQL, CI/CD, and system design. **Not** aimed at first-time programmers.
+You already know Go, Kubernetes, Terraform, distributed systems, and observability. This repository **does not** teach programming from zero—it connects AI to that foundation.
 
 ---
 
-## North Star Question
+## Purpose
 
-> Given a business problem, how would you design, build, deploy, secure, observe, scale, and optimize an AI solution in production?
-
-Every module is written to strengthen that capability—not to collect certificates.
-
----
-
-## Career progression (v2)
+Build the ability to take ambiguous business problems (e.g. *“enterprise assistant over millions of documents”*) and reason through:
 
 ```text
-Senior Backend / Platform Engineer
-              ↓
-         AI Engineer
-              ↓
-     AI Platform Engineer
-              ↓
- AI Infrastructure / Inference
-              ↓
- Staff AI / AI Infrastructure
-              ↓
-      FDE / AI Solutions
+Requirements → Architecture → Data → Models → RAG → Agents
+    → Inference → Infrastructure → Kubernetes → Security
+    → Observability → Cost → Scaling → Production
 ```
 
-Map your existing skills: [ai-to-existing-engineering-map.md](./ai-to-existing-engineering-map.md)  
-Curriculum review & changelog: [CURRICULUM_REVIEW.md](./CURRICULUM_REVIEW.md)
+**North star:** *Understand, build, deploy, evaluate, secure, observe, scale, and optimize modern AI systems.*
 
 ---
 
-## How to Use This Repo
+## Target roles
 
-```text
-1. Read ROADMAP.md (v2)     → phases by exit criteria, not fixed weeks
-2. Track PROGRESS.md        → theory / impl / projects / design / interview
-3. Study path               → 00 (skim) → 01 (short) → 02-ai-engineering-core → 03-llm …
-4. Build in 22-projects/    → 13 projects + PROJECT_STANDARDS.md
-5. INTERVIEW_MASTER.md      → cross-cutting drills
-6. GLOSSARY.md              → design-review vocabulary
-```
+### Primary
 
-### Capability Levels (target: Level 6)
+- AI Engineer · AI Platform Engineer · AI Infrastructure Engineer  
+- ML / AI Platform Engineer · Generative AI Engineer · AI/ML Infrastructure Engineer  
 
-| Level | Meaning |
-|-------|---------|
-| 1 — Understand | Explain the concept clearly |
-| 2 — Implement | Build a working version |
-| 3 — Debug | Troubleshoot real failures |
-| 4 — Design | Production architecture & APIs |
-| 5 — Optimize | Latency, cost, reliability |
-| 6 — Lead | Trade-offs, roadmap, org alignment |
+### Secondary
+
+- Forward Deployed Engineer · AI Solutions Engineer · AI Platform Architect  
+- Staff AI Engineer · Staff AI Infrastructure Engineer · Staff Platform Engineer  
 
 ---
 
-## Repository Map
+## AI stack (mental map)
 
 ```text
-ai-engineering-master/
-├── README.md                 ← you are here
-├── ROADMAP.md                ← 12–24 month plan
-├── PROGRESS.md               ← checklist
-├── GLOSSARY.md               ← terms
-├── INTERVIEW_MASTER.md       ← cross-cutting interview prep
-├── BUILD_LOG.md              ← project journal template
-│
-├── 00-foundations … 26-research/     ← theory (see STRUCTURE.md v2 IDs)
-├── 02-ai-engineering-core/           ← stack map (before LLM depth)
-├── 22-projects/                      ← 13 production-grade projects
-└── 25-interview-preparation/         ← planned (see STRUCTURE.md)
+                    AI APPLICATIONS
+                           │
+              ┌────────────┼────────────┐
+              ↓            ↓            ↓
+             RAG         AGENTS       TOOLS / MCP
+              │            │            │
+              └────────────┼────────────┘
+                           ↓
+                      AI PLATFORM
+                     (gateway, registry,
+                      tenancy, eval)
+                           │
+                    MODEL GATEWAY / ROUTER
+                           │
+                  MODEL SERVING (vLLM, Triton)
+                           │
+                 INFERENCE ENGINE (batch, KV)
+                           │
+                  GPU / ACCELERATOR (CUDA)
+                           │
+                    KUBERNETES (GPU, KEDA)
+                           │
+                CLOUD / INFRASTRUCTURE (Terraform)
 ```
 
-**Technology bias (when we build):**
+---
+
+## Learning philosophy
+
+Study pages are **concept-first essays**—not a fixed template. Each topic is written in its own shape (diagrams, tables, stories, code) depending on what helps you reason about production systems.
+
+**Hand-polished:** all of `00-foundations/`. **Narrative library:** `scripts/narrative_lib/m*.py` drives the rest.
+
+Regenerate after editing narratives:
+
+```powershell
+Set-Location scripts
+python narrative_curriculum.py
+```
+
+Do **not** use `generate_concept_material.py` (old static sections)—use `narrative_curriculum.py` only.
+
+**Technology strategy**
 
 | Layer | Stack |
 |-------|--------|
 | Platform / gateway | **Go** |
-| AI apps / eval / training glue | **Python** (FastAPI, async, Pydantic) |
-| Data | PostgreSQL, Redis, pgvector, Qdrant |
+| AI apps, RAG, agents, eval | **Python** (FastAPI, PyTorch, HF) |
+| Data | PostgreSQL, pgvector, Redis, Qdrant, Milvus |
 | Serving | vLLM, KServe, Triton |
 | Infra | Docker, Kubernetes, Helm, Terraform, GitHub Actions |
 | Observability | Prometheus, Grafana, OpenTelemetry |
-| Cloud | Azure-first, AWS where relevant |
 
-Frameworks (LangGraph, LlamaIndex, DSPy) are taught **after** you can implement the core ideas without them.
-
----
-
-## Learning Loop (every topic)
-
-```text
-Concept → Mental model → Internals → Experiment → Failure modes
-    → Production → Security & cost → Interview → Project hook
-```
-
-Each major document follows a consistent section pattern (see any file in `00-foundations/`).
+Teach **concepts before frameworks** (LangGraph, LlamaIndex, DSPy come after raw loops).
 
 ---
 
-## Projects (portfolio spine — 13 steps)
+## How to navigate
 
-See [22-projects/README.md](./22-projects/README.md) and [PROJECT_STANDARDS.md](./22-projects/PROJECT_STANDARDS.md).
-
-Highlights: LLM API → streaming → RAG → **RAG eval platform** → production RAG → agent → **5-server MCP** → K8s agent → **Go AI gateway** → model serving → observability → multi-tenant → **enterprise capstone**.
-
----
-
-## Curriculum Status (v2 architecture)
-
-| Area | Status |
-|------|--------|
-| v2 review, roadmap, structure | **Done** — [CURRICULUM_REVIEW.md](./CURRICULUM_REVIEW.md) |
-| `00-foundations` | Content written; use **skim path** if platform-focused |
-| `01-python` | Short bridge scoped; only `python-for-go-engineers.md` drafted |
-| `02-ai-engineering-core` | Index only — **next authored module after approval** |
-| Remaining modules | Per [STRUCTURE.md](./STRUCTURE.md); depth over breadth |
-
-**Hold:** No new lesson files until you approve v2 sequencing.
+| Document | Use |
+|----------|-----|
+| [ROADMAP.md](./ROADMAP.md) | 24 phases, recommended order |
+| [PROGRESS.md](./PROGRESS.md) | Checklists per module and project |
+| [GLOSSARY.md](./GLOSSARY.md) | Precise vocabulary |
+| [INTERVIEW_MASTER.md](./INTERVIEW_MASTER.md) | Cross-cutting interview prep |
+| [BUILD_LOG.md](./BUILD_LOG.md) | Portfolio journal template |
+| `00-foundations` … `24-research` | Theory and depth |
+| `22-projects` | Hands-on production projects |
+| `23-interview-preparation` | Role-specific question banks |
 
 ---
 
-## Study rhythm (v2 allocation)
+## Recommended learning order
 
-| Bucket | Share | Examples |
-|--------|-------|----------|
-| Theory | 20% | Core + LLM/RAG reading |
-| Implementation | 30% | Exercises, gateway slices |
-| Projects | 30% | `22-projects` ladder |
-| System design | 10% | `23-system-design` |
-| Interview | 10% | `INTERVIEW_MASTER` |
+1. **Phase 1–2:** `00-foundations` (skim math if experienced) + `01-python-for-ai-engineering`  
+2. **Phase 3–4:** `02-llm-fundamentals` + `03-llm-apis` + `04-prompt-engineering`  
+3. **Phase 5–6:** `05-embeddings-and-vector-search` + `06-rag`  
+4. **Phase 7–8:** `07-agents` + `08-mcp`  
+5. **Phase 9–11:** `09-ai-frameworks` (compare) + `10-evaluation` + `11-fine-tuning`  
+6. **Phase 12–14:** `12-model-serving` + `13-gpu` + `14-kubernetes-for-ai`  
+7. **Phase 15–19:** Platform, infra, observability, security, production  
+8. **Phase 20–24:** FDE, system design, projects, interviews, research  
 
-**Inference/platform modules:** shift toward 40% projects, 20% design, 20% interview (see ROADMAP).
-
----
-
-## Final Capability Checklist
-
-Use `PROGRESS.md` for the full checklist. At graduation you should confidently own:
-
-- LLM inference, RAG, agents, MCP, evaluation
-- Model serving, GPU/K8s scheduling, distributed inference
-- AI gateway, tenancy, cost, observability, security
-- FDE-style discovery → deployed solution → production debug
+Run **projects in parallel** once Phase 4 is underway (see ROADMAP).
 
 ---
 
-## License & Notes
+## Project progression (`22-projects/`)
 
-Personal study repository. Keep secrets out of git; use `.env` and cloud secret managers for API keys in projects.
+| # | Project |
+|---|---------|
+| 01 | LLM Chat API |
+| 02 | RAG system |
+| 03 | Production RAG |
+| 04 | AI agent |
+| 05 | MCP platform |
+| 06 | Kubernetes AI agent |
+| 07 | AI gateway (Go) |
+| 08 | Model serving |
+| 09 | AI observability |
+| 10 | Multi-tenant AI platform |
+| 11 | Enterprise capstone |
 
-**Start here:** [ai-to-existing-engineering-map.md](./ai-to-existing-engineering-map.md) → [ROADMAP.md](./ROADMAP.md) Phase 1 → [00-foundations/README.md](./00-foundations/README.md)
+Each project README defines architecture, tests, Docker, observability, security, and BUILD_LOG expectations.
+
+---
+
+## Interview preparation
+
+- Module **§19 Interview Questions** (Levels 1–2, Senior, Staff, FDE)  
+- `23-interview-preparation/` by domain  
+- `INTERVIEW_MASTER.md` for system design and debugging narratives  
+- Portfolio **BUILD_LOG** stories for behavioral loops  
+
+---
+
+## Using this repository
+
+1. Clone and work module-by-module; mark [PROGRESS.md](./PROGRESS.md).  
+2. For each topic: read → implement exercise → tie to a project slice.  
+3. Never skip **evaluation, security, or cost** on real features.  
+4. Regenerate missing files (if any): `python scripts/generate_curriculum.py`  
+5. Verify structure: `python scripts/verify_structure.py`  
+
+---
+
+## Status
+
+Full markdown curriculum generated across all modules listed in the repository tree. Key topics (e.g. attention, RAG, KV cache) include extended depth; expand further via projects and your BUILD_LOG.
+
+**Start:** [ROADMAP.md](./ROADMAP.md) Phase 1 → [00-foundations/mental-models.md](./00-foundations/mental-models.md)

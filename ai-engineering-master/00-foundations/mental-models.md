@@ -1,292 +1,142 @@
-# Mental Models for AI Systems
+# Mental Models for the AI Stack
 
-Use this page when you encounter a new architecture. If you can **place each component in the pictures below**, you can reason about failures, cost, and security without memorizing vendor names.
-
-For each model: **What should I visualize in my head?**
+These are **pictures to think with** when you read a diagram or debug a bad answer. You don’t need to memorize vendors—slot unknown boxes into one of these patterns.
 
 ---
 
 ## Token
 
-**Visualize:** A sentence shredded into **Lego bricks** from a fixed catalog (vocab ~32k–200k). Each brick has an ID. The model never sees “letters”—only IDs. Billing and context limits count bricks, not words.
+**Picture:** Text shredded into LEGO IDs from a catalog (~32k–200k pieces). The model never sees “hello” as letters—only ID `15496`. Your bill and context limit count **pieces**, not words.
 
-**Chain:** Text → tokenizer → `[15496, 995, ...]` → embedding lookup.
-
-**Failure:** Rare words split into many tokens → **cost spike** and context overflow.
+**When it bites you:** English prose vs JSON vs code changes token count 2×; legal clauses split into many subwords; you truncate the wrong end of the prompt.
 
 ---
 
 ## Embedding
 
-**Visualize:** A **GPS coordinate in 768–4096 dimensions** for a word, sentence, or document. Nearby points = similar meaning (approximately). You cannot read the coordinate as English—it’s for math (dot product, ANN search).
+**Picture:** A GPS coordinate in 768–4096 dimensions. “Refund policy” and “return item” sit close; “weather” is far away. You can’t read the numbers as English—they’re for **similarity math**.
 
-**Chain:** Token IDs → mean/last-token pool → vector used for search or as model input.
-
-**Failure:** Wrong embedding model for domain → “semantically close but wrong” retrieval.
+**When it bites you:** Wrong embedding model for the domain; forgot to normalize; changed model without reindexing.
 
 ---
 
 ## Attention
 
-**Visualize:** Each token holds a **flashlight** over the rest of the sequence, deciding who to listen to. Bright beam on relevant tokens, dim on others. Stacking layers = repeated “who matters for my meaning?”
+**Picture:** Each token holds a flashlight over the sequence, deciding who to listen to. Stack many layers and you get deep context—but attention budget is finite and expensive at long distance.
 
-**Chain:** Q, K, V projections → score matrix → softmax weights → weighted sum of values.
-
-**Failure:** Context too long → diffuse attention (“lost in the middle”); need RAG or summarization.
+**When it bites you:** “Lost in the middle” on stuffed prompts; debugging by staring at weights (you won’t in prod—ablate context instead).
 
 ---
 
 ## Transformer
 
-**Visualize:** A **pipeline of attention + feed-forward blocks** (like microservices for tensors). Data shape: `[batch, sequence, hidden]`. Decoder-only stacks predict next token; no separate “understanding module”—it’s all in the weights.
-
-**Chain:** Embed → N × (Attention → FFN) → logits → sample.
-
-**Failure:** Quadratic memory in naive attention over seq length → FlashAttention, sliding windows, etc.
+**Picture:** A conveyor of identical blocks: **mix tokens (attention)** → **per-token MLP** → repeat. Decoder-only stacks predict the next token; that’s ChatGPT-class behavior.
 
 ---
 
 ## Context window
 
-**Visualize:** A **fixed-size whiteboard**. Everything—system prompt, RAG chunks, chat history, tool outputs—must fit. When full, you erase oldest lines (truncate) or summarize (lossy).
-
-**Chain:** Sum(token counts) ≤ window → else policy (drop, compress, retrieve harder).
-
-**Failure:** Silent truncation of instructions or citations → wrong behavior.
+**Picture:** A whiteboard with fixed area. System prompt, RAG chunks, history, tool output—all compete for the same space. Overflow = truncate, summarize, or fail.
 
 ---
 
-## Inference
+## Inference (prefill + decode)
 
-**Visualize:** Two-phase factory line:
+**Picture:** A two-phase factory:
 
-1. **Prefill:** Read whole prompt in parallel (fill KV cache).
-2. **Decode:** Stamp out one token at a time, each step using cache.
+1. **Prefill** — read the whole prompt in parallel (compute-heavy).
+2. **Decode** — stamp one token at a time using KV cache (memory-bandwidth-heavy).
 
-**Chain:** Prompt → prefill → loop(decode until stop).
-
-**Failure:** Optimizing decode when prefill dominates (short outputs); or opposite for long prompts.
+Latency complaints are often “we optimized the wrong phase.”
 
 ---
 
 ## RAG
 
-**Visualize:** **Open-book exam**. Student (LLM) may only cite from pages you photocopied (retrieved chunks) plus what they memorized (weights). Librarian (retriever) picks pages; if wrong pages, answer fails even if student is smart.
+**Picture:** Open-book exam. A **librarian** (retriever) picks pages; the **student** (LLM) writes the answer. If the librarian brings the wrong chapter, the student can still sound confident.
 
-```text
-Question → embed → search index → top-k chunks → stuff prompt → LLM → answer + cites
-```
-
-**Failure:** Bad index, stale docs, chunk boundaries, injection in documents.
+RAG is usually **not** training the model on your docs—it’s **index + search + prompt stuffing**.
 
 ---
 
 ## Vector search
 
-**Visualize:** **Nearest neighbors in a map**, but 1000+ dimensions and millions of points. Index (HNSW, IVF) = phone book tricks to avoid checking every point.
-
-**Chain:** Query vector → ANN index → ids + scores → fetch text/metadata.
-
-**Failure:** Approximate index misses true neighbor; no metadata filter → cross-tenant leak.
+**Picture:** Nearest neighbors in a huge map. Indexes (HNSW, IVF) are tricks to avoid scanning every point—trade recall for speed.
 
 ---
 
 ## Reranking
 
-**Visualize:** **First pass:** cheap net catches 50 fish. **Second pass:** chef inspects top 10 properly. Cross-encoder or LLM scores (query, doc) pairs accurately but slowly.
-
-**Chain:** top-100 vector → rerank → top-5 to LLM.
-
-**Failure:** Skipping rerank saves latency but hurts precision on hard queries.
+**Picture:** Net fishing → chef inspects the catch. Cheap retrieval gets 50 candidates; expensive cross-encoder or LLM scores the top 10 properly.
 
 ---
 
 ## Agent
 
-**Visualize:** **Intern with a phone**, calling APIs (tools) until done. Manager (your code) sets max calls, budget, and approval for dangerous actions.
-
-```text
-while not done:
-    LLM → thought + optional tool call
-    runtime executes tool → result back to LLM
-```
-
-**Failure:** Infinite loop, wrong tool args, prompt injection via tool output.
+**Picture:** An intern with a phone (tools) and a manager (your code). The intern improvises; the manager sets **max calls, budget, and approval for dangerous actions**.
 
 ---
 
 ## Tool
 
-**Visualize:** A **typed RPC** the model may invoke: name + JSON schema. Runtime validates, authz, executes, returns string/JSON to model.
-
-**Chain:** Model emits tool_call → gateway checks policy → handler → observation message.
-
-**Failure:** Over-privileged tool = remote code execution by prompt.
+**Picture:** A typed RPC the model may invoke. Your runtime validates JSON, checks authz, executes, returns a string. Over-privileged tools = remote code execution via prompt.
 
 ---
 
-## MCP (Model Context Protocol)
+## MCP
 
-**Visualize:** **USB-C for AI tools**—standard plug shape so any client can discover tools/resources/prompts from a server without custom glue per IDE.
+**Picture:** USB-C for AI tools—one plug shape so clients discover servers (Git, K8s, DB) without custom glue per IDE.
 
-```text
-Client (Cursor, agent) ←JSON-RPC→ MCP Server (K8s, Git, metrics)
-```
-
-**Failure:** Treating MCP as auth boundary—it isn’t; still need network policy and secrets hygiene.
+Not a security boundary by itself—still need network policy and secrets hygiene.
 
 ---
 
 ## Model serving
 
-**Visualize:** **Specialized restaurant kitchen** for one heavy dish (the model). Queue out front, batch orders on the grill (GPU), plates stream out (tokens). Not “just another HTTP pod”—VRAM and batching dominate.
-
-```text
-Clients → queue → scheduler → GPU workers → stream tokens
-```
-
-**Failure:** OOM, queue latency, cold start loading 70GB weights.
+**Picture:** A kitchen built for one heavy dish. Queue out front, batch on the grill (GPU), plates stream out (tokens). Cold start = loading tens of GB of weights.
 
 ---
 
-## GPU
+## GPU / VRAM
 
-**Visualize:** Thousands of **simple workers** (cores) doing the same math on different data—perfect for big matrix multiply. **VRAM** = tiny warehouse shelf; if model + KV + batch don’t fit, job dies.
-
-**Chain:** Host CPU loads weights → CUDA kernels on device → PCIe bottleneck if shuffling carelessly.
-
-**Failure:** GPU at 30% util because batch too small or CPU preprocessing slow.
+**Picture:** Thousands of tiny workers great at matmul; **VRAM** is a small shelf. Model + KV cache + batch must fit or the job dies with OOM.
 
 ---
 
 ## KV cache
 
-**Visualize:** **Sticky notes** on each layer for every past token’s K and V so decode doesn’t re-read the whole book. Notes grow with sequence length × batch size.
-
-**Chain:** Prefill writes cache; each decode step appends one position.
-
-**Failure:** Long chat + big batch → OOM; paging (PagedAttention) mitigates.
+**Picture:** Sticky notes per layer for past tokens’ keys/values so decode doesn’t reread the whole book. Notes grow with **batch × sequence length**.
 
 ---
 
-## Batching
+## AI gateway
 
-**Visualize:** **Carpool**: one GPU trip carries multiple sequences. Static batch = wait until car full (latency). Continuous batch = passengers hop in/out each stop (throughput).
-
-**Chain:** Requests → scheduler groups → one forward → split outputs.
-
-**Failure:** Head-of-line blocking if one sequence generates 10k tokens.
-
----
-
-## Quantization
-
-**Visualize:** **Rounding prices** from $12.347 to $12.35—mostly same shopping cart, occasionally wrong item. INT4/INT8 weights = smaller, faster, less VRAM.
-
-**Chain:** FP16 baseline → calibrate → quantized weights → inference kernels.
-
-**Failure:** Quality drop on math/code; need eval per model + quant combo.
-
----
-
-## Inference gateway (AI gateway)
-
-**Visualize:** **Air traffic control** for models: authenticate flight plans, route to runway (provider/model), hold patterns (rate limits), divert on storms (circuit breaker), log fuel (tokens/$).
-
-```text
-Apps → gateway (policy) → {OpenAI, Anthropic, vLLM local}
-```
-
-**Failure:** Gateway bypassed by one team with raw API keys → no cost or security visibility.
+**Picture:** Air traffic control—auth, quotas, route to runway (model/provider), divert on storms (circuit breaker), log fuel (tokens/$).
 
 ---
 
 ## AI platform
 
-**Visualize:** **Internal cloud for AI primitives**: catalog of models, prompts, datasets, eval runs, tenants, quotas—so product teams ship features without owning GPUs or vendor contracts individually.
-
-```text
-Teams → platform APIs → shared gateway, RAG, agents, observability, governance
-```
-
-**Failure:** Platform too restrictive → shadow AI; too loose → cost and data incidents.
+**Picture:** Internal cloud for models, prompts, evals, tenancy—so product teams don’t each hold raw provider keys and reimplement limits.
 
 ---
 
 ## AI observability
 
-**Visualize:** **Flight recorder** for stochastic APIs: traces per request (retrieve → generate), metrics (TTFT, tokens/sec, error rate), logs (redacted), eval scores over time—not just CPU graphs.
-
-**Chain:** Instrument SDK → OTel → Prometheus/Grafana + trace backend + cost warehouse.
-
-**Failure:** Logging full prompts with PII; or only monitoring HTTP 200 while answers are wrong.
+**Picture:** Flight recorder for stochastic APIs: TTFT, tokens/sec, retrieval scores, tool failures—not just CPU graphs.
 
 ---
 
-## How to use these together
+## One diagram to rule them all
 
-```mermaid
-flowchart LR
-  U[User] --> G[AI Gateway]
-  G --> S[Serving / API]
-  S --> LLM[Transformer inference]
-  RAG[RAG] --> VS[Vector search]
-  VS --> LLM
-  A[Agent] --> T[Tools / MCP]
-  T --> LLM
-  OBS[Observability] -.-> G
-  OBS -.-> S
-  OBS -.-> RAG
+```text
+User → Gateway → App (RAG/Agent) → Retrieval/Tools → Model API or vLLM
+         │              │                                    │
+         └──────────────┴──────── Prometheus / OTel / eval ───┘
 ```
 
-When debugging, ask:
-
-1. Which box failed?
-2. Is it **data** (retrieval), **policy** (gateway), **compute** (GPU/batch), or **model behavior** (eval)?
+When something fails, ask: **which box**—data, retrieval, policy, model, or infra?
 
 ---
 
-## Interview Questions
-
-### Level 1
-
-1. Draw token → embedding → logits in three boxes.
-2. What is KV cache in one sentence?
-3. RAG vs “model memory”?
-4. What does an agent loop do?
-5. GPU vs CPU for LLMs?
-
-### Level 2
-
-1. Prefill vs decode latency.
-2. Why vector search then rerank?
-3. What is MCP?
-4. Continuous batching benefit?
-5. What does gateway add vs raw API?
-
-### Senior
-
-1. Trace one RAG request for observability spans.
-2. Multi-tenant: where enforce isolation?
-3. Cost drivers on one diagram.
-
-### Staff
-
-1. Teach mental models to a backend team in 10 minutes—outline.
-2. Platform primitives vs product features line.
-
-### FDE
-
-1. Whiteboard agent + RAG for customer incident response—label failure points.
-
----
-
-## Practical Exercise
-
-Pick a production incident you’ve seen (any domain). Re-map it onto this diagram with **hypothetical** AI components—practice explaining where you’d instrument first.
-
----
-
-## Mini Project
-
-One-page **personal cheat sheet** (PDF or md): draw all 20 models from memory; compare to this doc and fill gaps.
+Use this page before deep dives in `02-llm-fundamentals` and `06-rag`.

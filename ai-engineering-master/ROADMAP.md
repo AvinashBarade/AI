@@ -1,259 +1,222 @@
-# AI Engineering Master — Roadmap (v2)
+# AI Engineering Master — Roadmap (24 Phases)
 
-**Flexible 12–18 months** · **Exit-criteria driven** (not fixed weeks) · Optimized for **backend/platform/infra → Staff / FDE**.
+Flexible pacing for **8–20 h/week**. Advance by **competence**, not calendar. Connect every phase to **projects** and **interviews**.
 
-Read first: [CURRICULUM_REVIEW.md](./CURRICULUM_REVIEW.md) · [ai-to-existing-engineering-map.md](./ai-to-existing-engineering-map.md)
+**Allocation (default):** 20% theory · 30% implementation · 30% projects · 10% system design · 10% interview  
 
----
-
-## Career progression (curriculum spine)
-
-```text
-Senior Backend / Platform Engineer
-              ↓
-         AI Engineer
-              ↓
-     AI Platform Engineer
-              ↓
- AI Infrastructure / Inference
-              ↓
- Staff AI / AI Infrastructure
-              ↓
-      FDE / AI Solutions
-```
+**Serving / platform / infra phases:** shift toward 40% projects, 20% design, 20% interview.
 
 ---
 
-## Time allocation
+## Phase 1 — AI foundations
 
-### Default (application-balanced)
-
-| Theory | Implementation | Projects | System design | Interview |
-|--------|----------------|----------|---------------|-----------|
-| 20% | 30% | 30% | 10% | 10% |
-
-### Advanced modules (inference, platform, infra, K8s-for-AI)
-
-| Theory | Projects | System design | Interview |
-|--------|----------|---------------|-----------|
-| 20% | 40% | 20% | 20% |
-
-Adjust weekly hours (8–20h); advance phases when **exit criteria** are met.
+**Modules:** `00-foundations/`  
+**Focus:** AI vs ML vs GenAI, mental models, math for engineers (probability, linear algebra, optimization, information theory)—**skim** if platform-focused.  
+**Exit:** Explain embeddings, loss, training vs inference; draw token → answer diagram.
 
 ---
 
-## Dual track (same phases, different emphasis)
+## Phase 2 — Python for AI engineering
 
-| Track | Who | Emphasis |
-|-------|-----|----------|
-| **A — Application** | AI Engineer, Solutions | RAG, agents, eval, prompts |
-| **B — Platform/Infra** | Platform, Infra, Staff | Gateway, serving, GPU, capacity, observability |
-
-You should run **A deep enough for interviews** and **B deep enough for your moat**—see map in `ai-to-existing-engineering-map.md`.
+**Modules:** `01-python-for-ai-engineering/`  
+**Focus:** Go→Python bridge, typing, async, Pydantic, FastAPI patterns, NumPy/Pandas basics, uv/packaging, pytest.  
+**Exit:** Small FastAPI service + one eval script.
 
 ---
 
-## Dependency graph (v2)
+## Phase 3 — LLM fundamentals
 
-```mermaid
-flowchart TD
-  F0[00 Foundations skim] --> P1[01 Python bridge]
-  P1 --> CORE[02 AI Engineering Core]
-  CORE --> LLM[03 LLM Fundamentals]
-  LLM --> API[05 LLM APIs]
-  API --> PE[06 Prompt Engineering]
-  PE --> EMB[07 Embeddings]
-  EMB --> RAG[08 RAG deep track]
-  RAG --> AG[09 Agents]
-  AG --> MCP[10 MCP]
-  CORE --> PT[04 PyTorch fundamentals]
-  LLM --> INF[14 Inference engineering]
-  PT --> INF
-  INF --> GPU[15 GPU infrastructure]
-  GPU --> K8[16 Kubernetes for AI]
-  K8 --> PLAT[17 AI Platform]
-  PLAT --> AINF[18 AI Infrastructure]
-  AINF --> OBS[19 Observability]
-  OBS --> SEC[20 Security]
-  SEC --> PROD[21 Production AI]
-  RAG --> EV[12 Evaluation]
-  EV --> ML[13 ML lifecycle / FT]
-  PROD --> FDE[22 FDE]
-  FDE --> SD[23 System Design]
-  SD --> CAP[Project 13 Capstone]
-```
+**Modules:** `02-llm-fundamentals/`  
+**Focus:** Tokens, transformers, attention, positional encoding, pretraining, instruction tuning, alignment, inference, context, sampling, structured output, function calling, model selection.  
+**Exit:** Attention + causal mask explained; pick model for latency/cost trade-off.
 
 ---
 
-## Phase 1 — Map & bridge (2–3 weeks)
+## Phase 4 — LLM APIs and prompting
 
-| Work | Module / doc |
-|------|----------------|
-| Skim or deep-dive | `00-foundations` (see [README](./00-foundations/README.md)) |
-| Short bridge | `01-python-for-ai-engineering` (productivity only) |
-| **Required** | `02-ai-engineering-core` → `ai-system-mental-model.md` |
-| Read | `ai-to-existing-engineering-map.md` |
-
-**Exit criteria:** Draw full stack (app → platform → serving → K8s/GPU); explain Training vs FT vs Inference vs RAG vs Agents.
+**Modules:** `03-llm-apis/`, `04-prompt-engineering/`  
+**Focus:** Providers, streaming, retries, rate limits, token accounting; prompts, versioning, injection defenses; safe reasoning concepts (no hidden CoT).  
+**Project:** **01-llm-chat-api**  
+**Exit:** Production-grade API client wrapper with observability.
 
 ---
 
-## Phase 2 — LLM & chat APIs (4–6 weeks)
+## Phase 5 — Embeddings and vector search
 
-| Work | Module / project |
-|------|------------------|
-| Theory | `03-llm-fundamentals` (expanded) |
-| Integration | `05-llm-apis`, `06-prompt-engineering` |
-| Build | **P01** LLM API · **P02** Streaming chat |
-| Eval hook | `12-evaluation` (intro): golden set for chat |
-
-**Exit criteria:** Prefill vs decode; sampling params; streaming + token metrics; structured output + tools (bounded).
+**Modules:** `05-embeddings-and-vector-search/`  
+**Focus:** Models, cosine similarity, ANN, HNSW, IVF, pgvector, Qdrant, Milvus comparison.  
+**Exit:** Benchmark two embedding models on your corpus.
 
 ---
 
-## Phase 3 — RAG flagship (6–8 weeks)
+## Phase 6 — RAG
 
-| Work | Module / project |
-|------|------------------|
-| Theory | `07-embeddings-and-vector-search`, **`08-rag`** (ingestion → production) |
-| Security thread | RAG ACL, poisoning (preview → `20-ai-security`) |
-| Build | **P03** RAG · **P04** RAG eval platform · **P05** Production RAG |
-
-**Exit criteria:** Hybrid + rerank; MRR/nDCG or retrieval metrics; faithfulness eval; multi-tenant index design on paper.
+**Modules:** `06-rag/`  
+**Focus:** Full pipeline ingestion → production; hybrid, rerank, graph/multimodal; eval and failure modes; **RAG ≠ training**.  
+**Projects:** **02-rag-system**, **03-production-rag**  
+**Exit:** Citations + faithfulness metrics + ACL design.
 
 ---
 
-## Phase 4 — Agents & MCP (4–6 weeks)
+## Phase 7 — Agents
 
-| Work | Module / project |
-|------|------------------|
-| Theory | `09-agents`, `10-mcp` (enterprise security) |
-| Compare | `11-ai-frameworks` (tradeoffs only) |
-| Build | **P06** Agent · **P07** MCP (5 servers) |
-
-**Exit criteria:** Workflow vs agent decision; HITL; tool sandbox; MCP authZ; agent eval metrics.
+**Modules:** `07-agents/`  
+**Focus:** Loops, tools, planning, memory, state machines, multi-agent, HITL, security; **workflow vs agent**.  
+**Project:** **04-ai-agent**  
+**Exit:** Bounded agent with audit log and HITL for destructive tools.
 
 ---
 
-## Phase 5 — Platform & gateway (4–6 weeks)
+## Phase 8 — MCP
 
-| Work | Module / project |
-|------|------------------|
-| Theory | **`17-ai-platform-engineering`** |
-| Build | **P09** AI Gateway (Go)—**recommended before or parallel to P10** for platform track |
-| Cross-cut | Cost allocation, audit logs, prompt registry concepts |
-
-**Exit criteria:** Explain what an internal AI platform team ships; route models by policy; per-tenant quotas.
+**Modules:** `08-mcp/`  
+**Focus:** Architecture, transport, security; build servers (Git, K8s, Postgres, Prometheus).  
+**Project:** **05-mcp-platform**  
+**Exit:** Client uses MCP tools with authZ.
 
 ---
 
-## Phase 6 — Inference, PyTorch, GPU (6–8 weeks)
+## Phase 9 — AI frameworks
 
-| Work | Module / project |
-|------|------------------|
-| Literacy | `04-pytorch-fundamentals` |
-| Depth | **`14-inference-engineering`** (math: params, KV, throughput) |
-| Hardware | `15-gpu-and-accelerator-infrastructure` |
-| Build | **P10** Model serving (vLLM + K8s) |
-
-**Exit criteria:** KV cache memory estimate; quant trade-offs; tokens/sec vs latency; why inference is expensive (numbers).
+**Modules:** `09-ai-frameworks/`  
+**Focus:** LangChain, LangGraph, LlamaIndex, DSPy—strengths, weaknesses, when to avoid.  
+**Exit:** Same feature implemented raw vs one framework; written trade-off doc.
 
 ---
 
-## Phase 7 — Kubernetes & AI infrastructure (4–6 weeks)
+## Phase 10 — Evaluation
 
-| Work | Module / project |
-|------|------------------|
-| Theory | `16-kubernetes-for-ai` (no basic K8s), **`18-ai-infrastructure`** |
-| Labs | Capacity planning exercises (see infra module) |
-| Build | **P08** K8s AI agent (if not done in Phase 4) |
-
-**Exit criteria:** GPU scheduling story; autoscaling inference; HA + DR outline; **10M req/day** style problem worked.
+**Modules:** `10-evaluation/`  
+**Focus:** LLM/RAG/agent eval, offline/online, hallucination, faithfulness, CI pipelines.  
+**Exit:** Eval gate on PR for one project.
 
 ---
 
-## Phase 8 — Observability, security, production (3–4 weeks)
+## Phase 11 — Fine-tuning
 
-| Work | Module / project |
-|------|------------------|
-| Theory | `19-observability`, `20-ai-security`, `21-production-ai` |
-| Build | **P11** AI observability dashboards |
-| Artifacts | Threat models for RAG + agent + gateway |
-
-**Exit criteria:** Dashboards for TTFT, tokens, RAG faithfulness, agent tool failures; STRIDE-style AI doc.
+**Modules:** `11-fine-tuning/`  
+**Focus:** Prompt vs RAG vs SFT; LoRA/QLoRA; datasets; small GPU experiment.  
+**Exit:** Decision matrix for a real use case.
 
 ---
 
-## Phase 9 — ML lifecycle & fine-tuning (3–4 weeks, can overlap Phase 6)
+## Phase 12 — Model serving
 
-| Work | Module / project |
-|------|------------------|
-| Theory | **`13-ml-lifecycle-fine-tuning`** |
-| Build | Small LoRA/QLoRA lab (low GPU) |
-| Decision | Prompt vs RAG vs FT vs continued pretrain |
-
-**Exit criteria:** Registry → deploy → monitor loop; when **not** to fine-tune.
+**Modules:** `12-model-serving/`  
+**Focus:** Prefill/decode, batching, KV cache, quantization, speculative decoding, vLLM, Triton, KServe, gateway.  
+**Project:** **08-model-serving**  
+**Exit:** Capacity math for one model; load test results table.
 
 ---
 
-## Phase 10 — FDE & system design (4–6 weeks)
+## Phase 13 — GPU infrastructure
 
-| Work | Module |
-|------|--------|
-| FDE | `22-fde-engineering` (7 case studies) |
-| Design | `23-system-design` (20+ problems) |
-| Interview | `INTERVIEW_MASTER.md` + `25-interview-preparation` |
-
-**Exit criteria:** One written case end-to-end; one timed system design with cost + security.
+**Modules:** `13-gpu-and-accelerator-infrastructure/`  
+**Focus:** Architecture, VRAM, CUDA concepts, tensor cores, parallelism, distributed inference.  
+**Exit:** Compute vs memory-bound diagnosis for a workload.
 
 ---
 
-## Phase 11 — Tenancy & capstone (8–12 weeks)
+## Phase 14 — Kubernetes for AI
 
-| Work | Project |
-|------|---------|
-| Build | **P12** Multi-tenant AI platform |
-| Build | **P13** Enterprise AI platform capstone |
-
-**Exit criteria:** Isolation tests; Terraform/Helm; CI eval gates; DR + autoscaling story.
+**Modules:** `14-kubernetes-for-ai/`  
+**Focus:** GPU scheduling, device plugin, node pools, KEDA, KServe, Ray—**no K8s basics**.  
+**Project:** **06-kubernetes-agent**  
+**Exit:** GPU workload YAML + autoscaling story.
 
 ---
 
-## Project ladder (13)
+## Phase 15 — AI platform engineering
 
-See [22-projects/README.md](./22-projects/README.md) and [PROJECT_STANDARDS.md](./22-projects/PROJECT_STANDARDS.md).
-
----
-
-## What to skip (your profile)
-
-- Basic Git, Docker, REST, Kubernetes pod tutorials.
-- Long `00-foundations` math unless targeting math-heavy AI Engineer screens—use **skim path**.
-- General Python mastery—stay on [01 bridge scope](./01-python-for-ai-engineering/README.md).
-- `11-ai-frameworks` as deep study—**compare** only after raw agent/RAG loops.
-
-**Never skip:** eval, security, cost, observability, failure modes, capacity planning.
+**Modules:** `15-ai-platform-engineering/`  
+**Focus:** Gateway, registry, prompt registry, tenancy, quotas, cost, platform API.  
+**Project:** **07-ai-gateway** (Go)  
+**Exit:** Multi-model routing + per-tenant token accounting.
 
 ---
 
-## Knowledge checkpoints
+## Phase 16 — AI infrastructure
 
-| After | Checkpoint |
-|-------|------------|
-| `02-ai-engineering-core` | Stack diagram + lifecycle decision tree |
-| `08-rag` | 8 conceptual + 2 coding tasks |
-| `09-agents` | “Agent vs workflow” for 3 scenarios |
-| `14-inference` | KV memory + tokens/sec calculation |
-| `17-ai-platform` | Cut cost 50% worksheet |
-| `22-fde` | Bank RAG case (discovery → rollout) |
+**Modules:** `16-ai-infrastructure/`  
+**Focus:** Inference clusters, networking, storage, caching, DR, **capacity planning exercises**.  
+**Exit:** Worked example (e.g. 10M req/day, 2K tokens, peak RPS).
 
 ---
 
-## Authoring order (post-approval)
+## Phase 17 — Observability
 
-1. `02-ai-engineering-core/ai-system-mental-model.md`
-2. Complete short `01-python` bundle
-3. `03-llm-fundamentals` (tokens → sampling → lifecycle doc)
-4. Continue per [STRUCTURE.md](./STRUCTURE.md) priority flags
+**Modules:** `17-observability/`  
+**Focus:** Infra + LLM + RAG + agent metrics; Prometheus, Grafana, OTel.  
+**Project:** **09-ai-observability**  
+**Exit:** Dashboards for TTFT, tokens/sec, retrieval quality.
 
-**Current repo status:** v2 architecture applied; lesson content for modules above not yet written (except `00-foundations` + partial `01`).
+---
+
+## Phase 18 — Security
+
+**Modules:** `18-ai-security/`  
+**Focus:** Threat models, injection, RAG poisoning, tools, supply chain, PII—DevSecOps aligned.  
+**Exit:** STRIDE-style doc for one system.
+
+---
+
+## Phase 19 — Production AI
+
+**Modules:** `19-production-ai/`  
+**Focus:** Reliability, fallbacks, circuit breakers, multi-model strategy, incident patterns.  
+**Exit:** Runbook for provider outage.
+
+---
+
+## Phase 20 — FDE engineering
+
+**Modules:** `20-fde-engineering/`  
+**Focus:** Discovery → deployment → optimization; enterprise scenarios.  
+**Exit:** One full written case (architecture + cost + rollout).
+
+---
+
+## Phase 21 — System design
+
+**Modules:** `21-system-design/`  
+**Focus:** Chat, ChatGPT-scale, RAG platform, agent platform, gateway, serving, observability, multi-tenant, enterprise.  
+**Exit:** 3 timed designs with capacity + cost sections.
+
+---
+
+## Phase 22 — Projects
+
+**Modules:** `22-projects/` (integrate all prior phases)  
+**Projects:** **10-multi-tenant-ai-platform**, **11-capstone-ai-platform**  
+**Exit:** Capstone meets README acceptance criteria.
+
+---
+
+## Phase 23 — Interview preparation
+
+**Modules:** `23-interview-preparation/`, `INTERVIEW_MASTER.md`  
+**Focus:** Drills by role; Go coding; behavioral + FDE scenarios.  
+**Exit:** Mock loop with recorded system design.
+
+---
+
+## Phase 24 — Research
+
+**Modules:** `24-research/`  
+**Focus:** Emerging models, agents, inference, infra trends; papers for engineers.  
+**Exit:** Monthly one-page “what changed / should I learn now?”
+
+---
+
+## Parallel tracks (your profile)
+
+| Strength | Double down in |
+|----------|----------------|
+| Go / distributed systems | Phases 15–16, Project 07 |
+| Kubernetes / Terraform | Phases 14, 16, capstone |
+| Prometheus / Grafana | Phase 17 |
+| DevSecOps | Phase 18 on every project |
+
+---
+
+**Next step:** [PROGRESS.md](./PROGRESS.md) → Phase 1 checklist.

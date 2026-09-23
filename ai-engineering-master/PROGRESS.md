@@ -1,201 +1,129 @@
-# Progress Tracker (v2)
+# Progress Tracker
 
-Legend: `[ ]` Not started · `[~]` In progress · `[x]` Completed · `[!]` Needs revision · `(opt)` optional skim
+`[ ]` not started · `[~]` in progress · `[x]` done · `[!]` revise
 
-**Dimensions:** theory · implementation · project · interview · system design
+Update weekly. Track: **theory · implementation · project · system design · interview**
 
-**Time mix target:** 20 / 30 / 30 / 10 / 10 (theory / impl / projects / design / interview)
+**Current phase:** 1  
+**Primary role target:** _______________
 
 ---
 
-## Meta
+## Root & meta
 
 | Item | Status |
 |------|--------|
-| Curriculum v2 review | [x] read [CURRICULUM_REVIEW.md](./CURRICULUM_REVIEW.md) |
-| Engineering map | [ ] read [ai-to-existing-engineering-map.md](./ai-to-existing-engineering-map.md) |
+| README / ROADMAP | [x] |
+| Full module markdown generated | [x] |
 | BUILD_LOG habit | [ ] |
 
-**Primary target role:** _(AI Platform / AI Infra / FDE / Staff — pick one)_  
-**Secondary track:** _(Application / Platform / Infra)_  
-**Current phase:** Phase 1 — Map & bridge  
-**Started:** _(date)_
+---
+
+## Phase 1 — `00-foundations`
+
+| File | Theory | Interview |
+|------|--------|-----------|
+| ai-vs-ml-vs-dl-vs-genai.md | [ ] | [ ] |
+| probability-statistics-for-ai.md | [ ] | [ ] |
+| linear-algebra-for-ai.md | [ ] | [ ] |
+| optimization.md | [ ] | [ ] |
+| information-theory.md | [ ] | [ ] |
+| mental-models.md | [ ] | [ ] |
+
+## Phase 2 — `01-python-for-ai-engineering`
+
+| File | Theory | Code |
+|------|--------|------|
+| python-for-go-engineers.md | [ ] | [ ] |
+| numpy.md | [ ] | [ ] |
+| pandas.md | [ ] | [ ] |
+| typing.md | [ ] | [ ] |
+| async-python.md | [ ] | [ ] |
+| pydantic.md | [ ] | [ ] |
+| packaging.md | [ ] | [ ] |
+
+## Phases 3–24 — modules
+
+Mark module `[x]` when all files read + exercises attempted.
+
+| Module | Theory | Project hook | Interview |
+|--------|--------|--------------|-----------|
+| 02-llm-fundamentals | [ ] | P01 | [ ] |
+| 03-llm-apis | [ ] | P01 | [ ] |
+| 04-prompt-engineering | [ ] | P01 | [ ] |
+| 05-embeddings-and-vector-search | [ ] | P02 | [ ] |
+| 06-rag | [ ] | P02–P03 | [ ] |
+| 07-agents | [ ] | P04 | [ ] |
+| 08-mcp | [ ] | P05 | [ ] |
+| 09-ai-frameworks | [ ] | — | [ ] |
+| 10-evaluation | [ ] | all | [ ] |
+| 11-fine-tuning | [ ] | — | [ ] |
+| 12-model-serving | [ ] | P08 | [ ] |
+| 13-gpu-and-accelerator-infrastructure | [ ] | P08 | [ ] |
+| 14-kubernetes-for-ai | [ ] | P06 | [ ] |
+| 15-ai-platform-engineering | [ ] | P07 | [ ] |
+| 16-ai-infrastructure | [ ] | P11 | [ ] |
+| 17-observability | [ ] | P09 | [ ] |
+| 18-ai-security | [ ] | all | [ ] |
+| 19-production-ai | [ ] | all | [ ] |
+| 20-fde-engineering | [ ] | capstone | [ ] |
+| 21-system-design | [ ] | design | [ ] |
+| 23-interview-preparation | [ ] | — | [ ] |
+| 24-research | [ ] | — | [ ] |
 
 ---
 
-## Role readiness (self-score 1–10, update monthly)
+## Projects (`22-projects/`)
 
-| Role | Start (pre-v2) | Now | Target |
-|------|----------------|-----|--------|
-| AI Engineer | 4 | | 8+ |
-| AI Platform | 3 | | 9+ |
-| AI Infra | 3 | | 9+ |
-| FDE / Solutions | 2 | | 8+ |
-| Staff AI / Infra | 3 | | 8+ |
-
----
-
-## Phase 1 — Map & bridge
-
-| Item | Theory | Impl | Project | Interview | Design |
-|------|--------|------|---------|-------------|--------|
-| [ai-to-existing-engineering-map.md](./ai-to-existing-engineering-map.md) | [ ] | — | — | — | — |
-| 00-foundations (skim path) | [ ] | — | — | [ ] | — |
-| 00 mental-models + ai-vs-ml | [~] | — | — | [ ] | — |
-| 00 math (opt deep) | [ ] | [ ] | — | [ ] | — |
-| 01-python bridge (short) | [~] | [ ] | — | — | — |
-| 02-ai-engineering-core | [ ] | — | — | [ ] | [ ] |
-
----
-
-## Phase 2 — LLM & chat
-
-| Item | Status |
-|------|--------|
-| 03-llm-fundamentals | [ ] |
-| 05-llm-apis, 06-prompt-engineering | [ ] |
-| P01 llm-api | [ ] |
-| P02 streaming-chat | [ ] |
-| 12-evaluation (chat golden set) | [ ] |
-
----
-
-## Phase 3 — RAG flagship
-
-| Item | Status |
-|------|--------|
-| 07-embeddings-and-vector-search | [ ] |
-| 08-rag (deep track) | [ ] |
-| P03 rag-system | [ ] |
-| P04 rag-evaluation-platform | [ ] |
-| P05 production-rag | [ ] |
-
----
-
-## Phase 4 — Agents & MCP
-
-| Item | Status |
-|------|--------|
-| 09-agents | [ ] |
-| 10-mcp | [ ] |
-| 11-ai-frameworks (compare) | [ ] |
-| P06 ai-agent | [ ] |
-| P07 mcp-platform (5 servers) | [ ] |
-
----
-
-## Phase 5 — Platform
-
-| Item | Status |
-|------|--------|
-| 17-ai-platform-engineering | [ ] |
-| P09 ai-gateway (Go) | [ ] |
-
----
-
-## Phase 6 — Inference & GPU
-
-| Item | Status |
-|------|--------|
-| 04-pytorch-fundamentals | [ ] |
-| 14-inference-engineering | [ ] |
-| 15-gpu-infrastructure | [ ] |
-| P10 model-serving | [ ] |
-
----
-
-## Phase 7 — K8s & infra
-
-| Item | Status |
-|------|--------|
-| 16-kubernetes-for-ai | [ ] |
-| 18-ai-infrastructure + capacity labs | [ ] |
-| P08 kubernetes-ai-agent | [ ] |
-
----
-
-## Phase 8 — Obs, security, production
-
-| Item | Status |
-|------|--------|
-| 19-observability | [ ] |
-| 20-ai-security + threat models | [ ] |
-| 21-production-ai | [ ] |
-| P11 ai-observability | [ ] |
-
----
-
-## Phase 9 — ML lifecycle
-
-| Item | Status |
-|------|--------|
-| 13-ml-lifecycle-fine-tuning | [ ] |
-| Small LoRA project | [ ] |
-
----
-
-## Phase 10 — FDE & system design
-
-| Item | Status |
-|------|--------|
-| 22-fde-engineering (7 cases) | [ ] |
-| 23-system-design | [ ] |
-| 25-interview-preparation | [ ] |
-
----
-
-## Phase 11 — Capstone
-
-| Item | Status |
-|------|--------|
-| P12 multi-tenant-ai-platform | [ ] |
-| P13 enterprise-ai-platform | [ ] |
+| # | Folder | Code | Deploy | BUILD_LOG |
+|---|--------|------|--------|-----------|
+| 01 | 01-llm-chat-api | [ ] | [ ] | [ ] |
+| 02 | 02-rag-system | [ ] | [ ] | [ ] |
+| 03 | 03-production-rag | [ ] | [ ] | [ ] |
+| 04 | 04-ai-agent | [ ] | [ ] | [ ] |
+| 05 | 05-mcp-platform | [ ] | [ ] | [ ] |
+| 06 | 06-kubernetes-agent | [ ] | [ ] | [ ] |
+| 07 | 07-ai-gateway | [ ] | [ ] | [ ] |
+| 08 | 08-model-serving | [ ] | [ ] | [ ] |
+| 09 | 09-ai-observability | [ ] | [ ] | [ ] |
+| 10 | 10-multi-tenant-ai-platform | [ ] | [ ] | [ ] |
+| 11 | 11-capstone-ai-platform | [ ] | [ ] | [ ] |
 
 ---
 
 ## Final capability checklist
 
-(Unchanged goals—track as you complete modules.)
+### LLM & serving
 
-### LLM / inference
+- [ ] Transformer / attention / tokenization
+- [ ] Inference, KV cache, quantization
+- [ ] vLLM / KServe deployment
 
-- [ ] Transformer block + attention + masking
-- [ ] Training vs FT vs inference vs RAG vs agents
-- [ ] KV cache + capacity math
-- [ ] Quantization trade-offs
+### RAG & agents
 
-### RAG
+- [ ] Production RAG + eval
+- [ ] Agent + MCP + security
 
-- [ ] Ingestion → production pipeline
-- [ ] Hybrid + rerank + ACL + freshness
-- [ ] MRR/nDCG + faithfulness eval
+### Platform & infra
 
-### Agents / MCP
+- [ ] AI gateway, tenancy, cost
+- [ ] GPU K8s, capacity planning
 
-- [ ] Workflow vs agent decisions
-- [ ] Five MCP servers + enterprise security
+### Staff / FDE
 
-### Platform / infra
-
-- [ ] AI gateway + registry + tenancy
-- [ ] GPU/K8s scheduling + autoscaling
-- [ ] 10M req/day capacity exercise
-
-### FDE / Staff
-
-- [ ] 3+ case studies written
-- [ ] Cost / security / DR in every design
+- [ ] System design with cost + security
+- [ ] Customer case end-to-end
 
 ---
 
-## Capability level (L1–L6)
+## Capability levels (L1–L6 per domain)
 
 | Domain | L1 | L2 | L3 | L4 | L5 | L6 |
 |--------|----|----|----|----|----|-----|
 | LLM / inference | | | | | | |
 | RAG | | | | | | |
 | Agents / MCP | | | | | | |
-| Platform / gateway | | | | | | |
-| Infra / GPU / K8s | | | | | | |
+| Platform | | | | | | |
+| Infra / GPU | | | | | | |
 | Security | | | | | | |
 | FDE / design | | | | | | |
